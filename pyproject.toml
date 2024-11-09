@@ -7,11 +7,12 @@ readme = "README.md"
 packages = [{include = "electronics_shop_project"}]
 
 [tool.poetry.dependencies]
-python = "^3.11"
+python = "^3.13"
 
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.3.3"
+pytest-cov = "^6.0.0"
 
 [build-system]
 requires = ["poetry-core"]
