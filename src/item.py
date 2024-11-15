@@ -1,3 +1,5 @@
+
+from pathlib import Path
 import csv
 
 class Item:
@@ -7,7 +9,7 @@ class Item:
     pay_rate = 1.0
     all = []
 
-    def __init__(self, name: str, price: float, quantity: int, add_to_all=True) -> None:
+    def __init__(self, name: str, price: float, quantity: int, add=True) -> None:
         """
         Создание экземпляра класса item.
 
@@ -19,27 +21,39 @@ class Item:
         self.price = price
         self.quantity = quantity
 
-        if add_to_all:
+        if add:
             Item.all.append(self)
 
+    def __repr__(self):
+        return f"{self.__name}, {self.price}, {self.quantity}"
+
     @classmethod
-    def instantiate_from_csv(cls, path: str):
+    def instantiate_from_csv(cls, path: str) -> list:
         """Загружает данные из файла csv"""
-        with open(path, encoding="windows-1251") as file_csv:
+        base_path = Path(__file__).parent.parent / 'src' / 'items.csv'
+
+        with open(base_path, encoding="windows-1251") as file_csv:
             reader = csv.DictReader(file_csv)
 
             return [cls(**row) for row in reader]
 
+    @staticmethod
+    def string_to_number(string_value: str) -> int:
+        """Возвращает число из числа строки"""
+        return int(float(string_value))
+
     @property
-    def product_name(self):
+    def name(self):
         """Возвращает название продукта."""
         return self.__name
 
-    @product_name.setter
-    def product_name(self, value):
+    @name.setter
+    def name(self, value):
         """Если названия больше 10 символов, то оно обрезается"""
         if len(self.__name) > 10:
             self.__name = value[:10]
+        else:
+            self.__name = value
 
     def calculate_total_price(self) -> float:
         """
