@@ -1,6 +1,6 @@
 
-from pathlib import Path
 import csv
+from pathlib import Path
 
 class Item:
     """
@@ -25,7 +25,10 @@ class Item:
             Item.all.append(self)
 
     def __repr__(self):
-        return f"{self.__name}, {self.price}, {self.quantity}"
+        return f"Item('{self.__name}', {self.price}, {self.quantity})"
+
+    def __str__(self):
+        return self.__name
 
     @classmethod
     def instantiate_from_csv(cls, path: str) -> list:
