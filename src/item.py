@@ -9,7 +9,7 @@ class Item:
     pay_rate = 1.0
     all = []
 
-    def __init__(self, name: str, price: float, quantity: int, add=True) -> None:
+    def __init__(self, name: str, price: float, quantity: int) -> None:
         """
         Создание экземпляра класса item.
 
@@ -21,9 +21,6 @@ class Item:
         self.price = price
         self.quantity = quantity
 
-        if add:
-            Item.all.append(self)
-
     def __repr__(self):
         return f"Item('{self.__name}', {self.price}, {self.quantity})"
 
@@ -32,17 +29,17 @@ class Item:
 
     @classmethod
     def instantiate_from_csv(cls, path: str) -> list:
-        """Загружает данные из файла csv"""
+        """Загружает данные из CSV-файла и создает экземпляры класса."""
         base_path = Path(__file__).parent.parent / 'src' / 'items.csv'
 
         with open(base_path, encoding="windows-1251") as file_csv:
             reader = csv.DictReader(file_csv)
 
-            return [cls(**row) for row in reader]
+            return [cls.all.append(cls(**row)) for row in reader]
 
     @staticmethod
     def string_to_number(string_value: str) -> int:
-        """Возвращает число из числа строки"""
+        """Преобразует строковое представление числа в целое число."""
         return int(float(string_value))
 
     @property
@@ -52,7 +49,7 @@ class Item:
 
     @name.setter
     def name(self, value):
-        """Если названия больше 10 символов, то оно обрезается"""
+        """Устанавливает название товара, обрезая его, если оно превышает 10 символов."""
         if len(self.__name) > 10:
             self.__name = value[:10]
         else:
@@ -61,13 +58,10 @@ class Item:
     def calculate_total_price(self) -> float:
         """
         Рассчитывает общую стоимость конкретного товара в магазине.
-
         :return: Общая стоимость товара.
         """
         return self.price * self.quantity
 
     def apply_discount(self) -> None:
-        """
-        Применяет установленную скидку для конкретного товара.
-        """
+        """Применяет установленную скидку для конкретного товара."""
         self.price = self.price * Item.pay_rate

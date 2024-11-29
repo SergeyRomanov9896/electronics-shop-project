@@ -1,7 +1,7 @@
 from src.item import Item
 
 if __name__ == '__main__':
-    item = Item('Телефон', 10000, 5, add=False)
+    item = Item('Телефон', 10000, 5)
 
     # длина наименования товара меньше 10 символов
     item.name = 'Смартфон'
