@@ -65,6 +65,11 @@ def test_character_length(load_csv):
      load_csv = Item.all[4]
      assert load_csv.name == load_csv.name[:10]
 
+def test_name_setter(item2):
+     if len(item2.name) > 10:
+          with pytest.raises(ValueError):
+               assert item2.name == 'СуперСмартфон'
+
 def test_all_csv(load_csv):
      """Проверка того что все данные в csv файле внесены в список all"""
      assert len(Item.all) == 5

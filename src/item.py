@@ -48,12 +48,12 @@ class Item:
         return self.__name
 
     @name.setter
-    def name(self, value):
+    def name(self, name: str):
         """Устанавливает название товара, обрезая его, если оно превышает 10 символов."""
         if len(self.__name) > 10:
-            self.__name = value[:10]
+            raise ValueError("Длина наименования товара превышает 10 символов.")
         else:
-            self.__name = value
+            self.__name = name
 
     def calculate_total_price(self) -> float:
         """
