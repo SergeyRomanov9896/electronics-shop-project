@@ -2,6 +2,7 @@
 
 import pytest
 from src.item import Item
+from src.phone import Phone
 
 @pytest.fixture
 def item1():
@@ -80,9 +81,26 @@ def test_string_to_number():
      assert Item.string_to_number('5.0') == 5
      assert Item.string_to_number('5.5') == 5
 
-def test_init_homework_3():
+def test_homework_3():
      """Тестирование инициализации объекта"""
      item1 = Item("Смартфон", 10000, 20)
 
      assert repr(item1) == "Item('Смартфон', 10000, 20)"
      assert str(item1) == 'Смартфон'
+
+def test_homework_4():
+     phone1 = Phone("iPhone 14", 120_000, 5, 2)
+     item1 = Item("Смартфон", 10000, 20)
+
+     assert str(phone1) == 'iPhone 14'
+     assert repr(phone1) == "Phone('iPhone 14', 120000, 5, 2)"
+     assert phone1.number_of_sim == 2
+
+     assert item1 + phone1 == 25
+     assert phone1 + phone1 == 10
+
+     if phone1.number_of_sim <= 0:
+          with pytest.raises(ValueError):
+               print('Количество физических SIM-карт должно быть целым числом больше нуля.')
+     else:
+          assert phone1.number_of_sim > 0
