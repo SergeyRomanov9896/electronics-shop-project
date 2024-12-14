@@ -67,5 +67,5 @@ class Item:
         self.price = self.price * Item.pay_rate
 
     def __add__(self, other):
-        return self.quantity + other.quantity
-
+        if isinstance(other, self.__class__):
+            return self.quantity + other.quantity
