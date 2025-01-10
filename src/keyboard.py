@@ -41,7 +41,7 @@ class Keyboard(LanguageMixin):
         """
         Возвращает строковое представление объекта для разработчиков.
 
-        :return: Строка в формате: Класс(название, цена, количество)
+        :return: Название клавиатуры, Цена и Количество.
         """
         return f"{self.__class__.__name__}({self.name}, {self.price}, {self.quantity})"
 
