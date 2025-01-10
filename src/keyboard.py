@@ -20,19 +20,6 @@ class LanguageMixin:
         """Возвращает текущую раскладку клавиатуры."""
         return self.__LANGUAGE
 
-    @language.setter
-    def language(self, language: str) -> None:
-        """
-        Устанавливает новую раскладку клавиатуры.
-
-        :param language: Новая раскладка клавиатуры (EN или RU).
-        :raises ValueError: Если указанная раскладка не поддерживается.
-        """
-        if not language in ["EN", "RU"]:
-            raise ValueError("AttributeError: property 'language' of 'Keyboard' object has no setter")
-        else:
-            self.__LANGUAGE = language
-
 class Keyboard(LanguageMixin):
     """
     Класс для описания клавиатуры с возможностью изменения раскладки.
