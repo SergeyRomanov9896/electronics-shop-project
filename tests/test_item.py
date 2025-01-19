@@ -31,6 +31,10 @@ def csv_reader():
     with open(base_path, encoding="windows-1251") as file_csv:
         yield file_csv
 
+@pytest.fixture
+def csv_path():
+     base_path = os.path.join(os.path.dirname(__file__), '..', 'src', 'items.csv')
+
 @pytest.fixture(autouse=True)
 def clear_items():
     yield
@@ -130,7 +134,7 @@ def test_csv_file_errors(csv_reader):
           with pytest.raises(InstantiateCSVError):
                print(f'Файл item.csv поврежден')
 
-     if csv_reader is None:
+     if not csv_reader:
           with pytest.raises(FileNotFoundError):
                print('Отсутствует файл item.csv')
 
