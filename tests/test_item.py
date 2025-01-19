@@ -1,8 +1,11 @@
 
+import os
+
 import pytest
-from pathlib import Path
+import csv
 
 from src.item import Item
+from src.item import InstantiateCSVError
 from src.phone import Phone
 
 @pytest.fixture
@@ -23,7 +26,7 @@ def phone1():
 
 @pytest.fixture
 def csv_reader():
-    base_path = Path(__file__).parent.parent / 'src' / 'items.csv'
+    base_path = os.path.join(os.path.dirname(__file__), '..','src', 'items.csv')
 
     with open(base_path, encoding="windows-1251") as file_csv:
         yield file_csv
@@ -119,3 +122,16 @@ def test_add_classes(item1, phone1):
      """Проверяет сложение экземпляров классов Item и Phone"""
      assert item1 + phone1 == 25
      assert phone1 + phone1 == 10
+
+def test_csv_file_errors(csv_reader):
+     """Проверка обработки ошибок при чтении csv файла"""
+     x = [i for i in csv.DictReader(csv_reader)]
+     if len(x) != 5:
+          with pytest.raises(InstantiateCSVError):
+               print(f'Файл item.csv поврежден')
+
+     if csv_reader is None:
+          with pytest.raises(FileNotFoundError):
+               print('Отсутствует файл item.csv')
+
+
