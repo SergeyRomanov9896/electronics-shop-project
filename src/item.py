@@ -1,6 +1,10 @@
 
+import os
+
 import csv
-from pathlib import Path
+
+class InstantiateCSVError(Exception):
+    pass
 
 class Item:
     """
@@ -56,14 +60,22 @@ class Item:
         """
         cls.all.clear()
 
-        base_path = Path(__file__).parent.parent / 'src' / 'items.csv'
+        base_path = os.path.join(os.path.dirname(__file__), '..','src', 'items.csv')
 
-        with open(base_path, encoding="windows-1251") as file_csv:
-            reader = csv.DictReader(file_csv)
+        try:
+            with open(base_path, encoding="windows-1251") as file_csv:
+                reader = csv.DictReader(file_csv)
 
-            items = [cls(**row) for row in reader]
+                items = [cls(**row) for row in reader]
 
-        cls.all = items
+            cls.all = items
+
+            if len(items) != 5:
+                raise InstantiateCSVError(f'Файл {path} поврежден')
+        except FileNotFoundError:
+            print(f'Отсутствует файл {path}')
+
+        
 
     @staticmethod
     def string_to_number(string_value: str) -> int:
@@ -122,3 +134,5 @@ class Item:
         """
         if isinstance(other, self.__class__):
             return self.quantity + other.quantity
+
+
