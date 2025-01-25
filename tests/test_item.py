@@ -2,7 +2,6 @@
 import os
 
 import pytest
-import csv
 
 from src.item import Item
 from src.item import InstantiateCSVError
@@ -127,15 +126,19 @@ def test_add_classes(item1, phone1):
      assert item1 + phone1 == 25
      assert phone1 + phone1 == 10
 
-def test_csv_file_errors(csv_reader):
-     """Проверка обработки ошибок при чтении csv файла"""
-     x = [i for i in csv.DictReader(csv_reader)]
-     if len(x) != 5:
-          with pytest.raises(InstantiateCSVError):
-               print(f'Файл item.csv поврежден')
+def test_checking_data(csv_reader):
+     """Проверка на отсутствие указанных данных колонки атрибутов при инициализации файла"""
+     rows = csv_reader.readlines()
 
-     if not csv_reader:
-          with pytest.raises(FileNotFoundError):
-               print('Отсутствует файл item.csv')
+     if rows[0].strip().split(',') != ['name', 'price', 'quantity']:
+          pytest.raises(InstantiateCSVError)
+          assert Item.instantiate_from_csv() == 'Файл items.csv поврежден'
 
 
+def test_checking_missing_file():
+     """Проверка на отсутствие файла items.csv"""
+     base_path = os.path.join(os.path.dirname(__file__), '..', 'src', 'items.csv')
+
+     with pytest.raises(FileNotFoundError):
+          with open(base_path, encoding="windows-1251") as file_csv:
+               file_csv.read()

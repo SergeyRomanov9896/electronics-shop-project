@@ -48,7 +48,7 @@ class Item:
         return self.__name
 
     @classmethod
-    def instantiate_from_csv(cls, path: str):
+    def instantiate_from_csv(cls):
         """
         Инициализирует экземпляры класса на основе данных из CSV-файла.
 
@@ -61,21 +61,21 @@ class Item:
         cls.all.clear()
 
         base_path = os.path.join(os.path.dirname(__file__), '..','src', 'items.csv')
+        file_name = os.path.basename(base_path)
 
         try:
             with open(base_path, encoding="windows-1251") as file_csv:
                 reader = csv.DictReader(file_csv)
 
+                if list(reader.fieldnames) != ['name', 'price', 'quantity']:
+                     raise InstantiateCSVError(f'Файл {file_name} поврежден')
+
                 items = [cls(**row) for row in reader]
 
             cls.all = items
 
-            if len(items) != 5:
-                raise InstantiateCSVError(f'Файл {path} поврежден')
         except FileNotFoundError:
-            print(f'Отсутствует файл {path}')
-
-        
+            print(f'Отсутствует файл {file_name}')
 
     @staticmethod
     def string_to_number(string_value: str) -> int:
@@ -134,5 +134,3 @@ class Item:
         """
         if isinstance(other, self.__class__):
             return self.quantity + other.quantity
-
-
