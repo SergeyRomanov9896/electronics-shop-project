@@ -4,7 +4,6 @@ import os
 import pytest
 
 from src.item import Item
-from src.item import InstantiateCSVError
 from src.phone import Phone
 
 @pytest.fixture
@@ -29,10 +28,6 @@ def csv_reader():
 
     with open(base_path, encoding="windows-1251") as file_csv:
         yield file_csv
-
-@pytest.fixture
-def csv_path():
-     base_path = os.path.join(os.path.dirname(__file__), '..', 'src', 'items.csv')
 
 @pytest.fixture(autouse=True)
 def clear_items():
@@ -96,7 +91,7 @@ def test_csv_file_data(csv_reader):
 
 def test_csv_items():
      """Проверка того что все данные в csv файле внесены в список all"""
-     Item.instantiate_from_csv('src/item.py')
+     Item.instantiate_from_csv('src/items.csv')
      assert len(Item.all) == 5
 
 def test_name_setter_error(item3):
@@ -131,14 +126,12 @@ def test_checking_data(csv_reader):
      rows = csv_reader.readlines()
 
      if rows[0].strip().split(',') != ['name', 'price', 'quantity']:
-          pytest.raises(InstantiateCSVError)
-          assert Item.instantiate_from_csv() == 'Файл items.csv поврежден'
+          assert Item.instantiate_from_csv('src/items_error.csv') == 'Файл items.csv поврежден'
 
-
-def test_checking_missing_file():
+def test_checking_missing_file(capsys):
      """Проверка на отсутствие файла items.csv"""
-     base_path = os.path.join(os.path.dirname(__file__), '..', 'src', 'items.csv')
+     Item.instantiate_from_csv("error_path")
+     captured = capsys.readouterr()
+     assert captured.out == "Отсутствует файл error_path\n"
 
-     with pytest.raises(FileNotFoundError):
-          with open(base_path, encoding="windows-1251") as file_csv:
-               file_csv.read()
+
