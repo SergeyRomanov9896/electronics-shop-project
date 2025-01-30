@@ -48,7 +48,7 @@ class Item:
         return self.__name
 
     @classmethod
-    def instantiate_from_csv(cls):
+    def instantiate_from_csv(cls, path: str):
         """
         Инициализирует экземпляры класса на основе данных из CSV-файла.
 
@@ -60,7 +60,7 @@ class Item:
         """
         cls.all.clear()
 
-        base_path = os.path.join(os.path.dirname(__file__), '..','src', 'items.csv')
+        base_path = os.path.join(os.path.dirname(__file__), '..', path)
         file_name = os.path.basename(base_path)
 
         try:
