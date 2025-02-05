@@ -3,7 +3,7 @@ import os
 
 import pytest
 
-from src.item import Item
+from src.item import Item, InstantiateCSVError
 from src.phone import Phone
 
 @pytest.fixture
@@ -121,17 +121,14 @@ def test_add_classes(item1, phone1):
      assert item1 + phone1 == 25
      assert phone1 + phone1 == 10
 
-def test_checking_data(csv_reader):
+def test_checking_data():
      """Проверка на отсутствие указанных данных колонки атрибутов при инициализации файла"""
-     rows = csv_reader.readlines()
-
-     if rows[0].strip().split(',') != ['name', 'price', 'quantity']:
-          assert Item.instantiate_from_csv('src/items_error.csv') == 'Файл items.csv поврежден'
+     with pytest.raises(InstantiateCSVError) as excinfo:
+          Item.instantiate_from_csv('src/items_error.csv')
+     assert str(excinfo.value) == 'Файл items_error.csv поврежден'
 
 def test_checking_missing_file(capsys):
      """Проверка на отсутствие файла items.csv"""
      Item.instantiate_from_csv("error_path")
      captured = capsys.readouterr()
      assert captured.out == "Отсутствует файл error_path\n"
-
-
